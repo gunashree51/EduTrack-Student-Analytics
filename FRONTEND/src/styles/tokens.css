@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════════════
+   EduTrack v2 — Design Tokens & Global Styles
+   Aesthetic: Deep-space dark · Electric accents
+   Fonts: Outfit (display+body) + JetBrains Mono (data)
+═══════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+
+:root {
+  /* Backgrounds */
+  --bg:   #05080f;
+  --s1:   #0c1120;
+  --s2:   #111827;
+  --s3:   #1a2235;
+
+  /* Borders */
+  --b1: rgba(255,255,255,0.06);
+  --b2: rgba(255,255,255,0.11);
+  --b3: rgba(255,255,255,0.18);
+
+  /* Brand accent */
+  --blue:    #4f8ef7;
+  --blue2:   #3b6fd4;
+  --blue-g:  rgba(79,142,247,0.18);
+  --blue-gl: rgba(79,142,247,0.08);
+
+  /* Semantic colors */
+  --cyan:    #22d3ee;
+  --cyan-g:  rgba(34,211,238,0.15);
+  --emerald: #34d399;
+  --em-g:    rgba(52,211,153,0.14);
+  --rose:    #fb7185;
+  --rose-g:  rgba(251,113,133,0.14);
+  --amber:   #fbbf24;
+  --amb-g:   rgba(251,191,36,0.14);
+  --violet:  #a78bfa;
+  --vio-g:   rgba(167,139,250,0.14);
+
+  /* Text */
+  --t1: #f8fafc;
+  --t2: #94a3b8;
+  --t3: #475569;
+  --t4: #1e293b;
+
+  /* Typography */
+  --font:  'Outfit', system-ui, sans-serif;
+  --mono:  'JetBrains Mono', monospace;
+
+  /* Shape */
+  --r1: 8px;
+  --r2: 14px;
+  --r3: 20px;
+
+  /* Layout */
+  --sidebar: 236px;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--t1);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Subtle noise texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.5;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+/* Animations */
+@keyframes fadeIn   { from { opacity: 0 }              to { opacity: 1 } }
+@keyframes slideUp  { from { opacity: 0; transform: translateY(20px) scale(0.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+@keyframes slideRight { from { opacity: 0; transform: translateX(18px) } to { opacity: 1; transform: translateX(0) } }
+@keyframes countUp  { from { opacity: 0; transform: translateY(8px) }   to { opacity: 1; transform: translateY(0) } }
+
+/* Layout */
+.app    { display: flex; height: 100vh; overflow: hidden; }
+.main   { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.scroll { flex: 1; overflow-y: auto; }
+.page   { padding: 26px 28px 40px; }

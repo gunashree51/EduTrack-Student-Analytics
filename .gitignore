@@ -1,0 +1,11 @@
+# Backend
+BACKEND/target/
+*.class
+
+# Frontend
+FRONTEND/node_modules/
+
+# Common
+.idea/
+out/
+.env
