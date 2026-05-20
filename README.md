@@ -2,11 +2,11 @@
 
 EduTrack is a full-stack student management system built using React, Java Spring Boot, REST APIs, and MySQL. The project helps manage student records, attendance, grades, fee details, and dashboard analytics through a responsive web interface.
 
-## Live Demo
+## 🚀 Live Demo
 
 [View Live Project](https://edu-track-student-analytics.vercel.app)
 
-## Project Screenshot
+## 📸 Project Screenshots
 ![EduTrack Sign In](signin.png)
 ![EduTrack Dashboard](dashboard.png)
 
@@ -14,13 +14,13 @@ EduTrack is a full-stack student management system built using React, Java Sprin
 
 [View GitHub Repository](https://github.com/gunashree51/EduTrack-Student-Analytics)
 
-## Project Overview
+## 📌 Project Overview
 
 EduTrack provides a centralized platform for managing student-related academic data. It allows users to register, log in, manage students, mark attendance, record grades, manage fees, and view dashboard insights.
 
 The application follows a full-stack architecture where the React frontend communicates with the Spring Boot backend using REST APIs. The backend is connected to a cloud-hosted MySQL database, so the data remains saved even after refreshing, logging out, or logging in again.
 
-## Features
+## ✨ Features
 
 - User registration and login
 - JWT-based authentication
@@ -33,7 +33,7 @@ The application follows a full-stack architecture where the React frontend commu
 - Cloud database storage
 - Responsive user interface
 
-## Tech Stack
+## 🛠 Tech Stack
 
 ### Frontend
 - React.js
@@ -63,7 +63,7 @@ The application follows a full-stack architecture where the React frontend commu
 
 React Frontend deployed on Vercel communicates with the Spring Boot backend deployed on Render using REST APIs. The backend stores and retrieves data from an Aiven Cloud MySQL database.
 
-## Modules
+##🧩 Modules
 
 ### Authentication
 Users can register and log in securely using JWT-based authentication.
@@ -83,14 +83,14 @@ Users can manage fee records including fee type, amount, paid amount, due date, 
 ### Dashboard
 The dashboard displays overall insights such as total students, attendance rate, grades recorded, and recent student enrollments.
 
-## Deployment Details
+##☁️ Deployment Details
 
 - Frontend is deployed on Vercel.
 - Backend Spring Boot API is deployed on Render.
 - MySQL database is hosted on Aiven Cloud.
 - Environment variables are used to keep database credentials secure.
 
-## Future Enhancements
+## 🔮 Future Enhancements
 
 - Add password reset functionality
 - Add advanced analytics and reports
@@ -98,7 +98,7 @@ The dashboard displays overall insights such as total students, attendance rate,
 - Add role-based dashboards for admin and teacher
 - Add notification system for pending fees and low attendance
 
-## Author
+##  👩‍💻 Author
 
 **Gunashree S**
 
