@@ -40,8 +40,8 @@ public class SecurityConfig {
         http.csrf(c -> c.disable())
             .cors(c -> c.configurationSource(corsSource()))
             .authorizeHttpRequests(a -> a
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated())
+    .requestMatchers("/", "/api/test", "/api/auth/**").permitAll()
+    .anyRequest().authenticated())
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authProvider())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
