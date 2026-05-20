@@ -7,8 +7,8 @@ EduTrack is a full-stack student management system built using React, Java Sprin
 [View Live Project](https://edu-track-student-analytics.vercel.app)
 
 ## Project Screenshot
-![EduTrack Sign In](screenshots/signin.png)
-![EduTrack Dashboard](screenshots/dashboard.png)
+![EduTrack Sign In](signin.png)
+![EduTrack Dashboard](dashboard.png)
 
 ## Source Code
 
