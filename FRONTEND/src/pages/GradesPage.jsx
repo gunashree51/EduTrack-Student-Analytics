@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext.jsx";
 import Modal from "../components/Modal.jsx";
 import { ExamBadge } from "../components/Badges.jsx";
-import { DEMO_GRADES, DEMO_STUDENTS } from "../utils/demoData.js";
 
 // Auto-compute grade letter from percentage
 function autoGrade(got, total) {
@@ -24,8 +23,8 @@ export default function GradesPage() {
   const { api, grades, setGrades, students, toast } = useApp();
   const [modal, setModal] = useState(null);
 
-  const G = grades.length   ? grades   : DEMO_GRADES;
-  const S = students.length ? students : DEMO_STUDENTS;
+  const G = grades;
+const S = students;
 
   const handleSave = async (data) => {
     try {

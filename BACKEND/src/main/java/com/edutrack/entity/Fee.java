@@ -3,13 +3,14 @@ package com.edutrack.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "grades")
+@Table(name = "fees")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Grade {
+public class Fee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,16 +19,15 @@ public class Grade {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Student student;
     @Column(nullable = false)
-    private String subject;
+    private String feeType;
     @Column(nullable = false)
-    private String examType;
+    private Double amount;
     @Column(nullable = false)
-    private Double marksObtained;
+    private Double paid;
     @Column(nullable = false)
-    private Double totalMarks;
+    private LocalDate dueDate;
     @Column(nullable = false)
-    private String grade;
-    private String remarks;
+    private String status;
     @Column(nullable = false)
-    private String academicYear;
+    private String month;
 }

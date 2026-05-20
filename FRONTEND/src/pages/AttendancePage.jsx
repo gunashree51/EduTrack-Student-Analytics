@@ -2,14 +2,13 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext.jsx";
 import Modal from "../components/Modal.jsx";
 import { AttBadge } from "../components/Badges.jsx";
-import { DEMO_ATTENDANCE, DEMO_STUDENTS } from "../utils/demoData.js";
 
 export default function AttendancePage() {
   const { api, attendance, setAttendance, students, toast } = useApp();
   const [modal, setModal] = useState(null);
 
-  const A = attendance.length ? attendance : DEMO_ATTENDANCE;
-  const S = students.length   ? students   : DEMO_STUDENTS;
+  const A = attendance;
+const S = students;
 
   const total   = A.length;
   const present = A.filter(a => a.status==="PRESENT").length;

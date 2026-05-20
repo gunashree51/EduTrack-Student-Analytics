@@ -12,8 +12,11 @@ import AnalyticsPage  from "./pages/AnalyticsPage.jsx";
 import FeesPage       from "./pages/FeesPage.jsx";
 
 function AppShell(){
-  const {token,page}=useApp();
+  const {token,page,user,setPage}=useApp();
   const [addTrigger,setAddTrigger]=useState(false);
+  if(user?.role === "TEACHER" && page === "fees"){
+  setPage("dashboard");
+}
   if(!token) return <AuthPage/>;
   return(
     <div className="app">
@@ -26,7 +29,7 @@ function AppShell(){
           {page==="attendance" && <AttendancePage/>}
           {page==="grades"     && <GradesPage/>}
           {page==="analytics"  && <AnalyticsPage/>}
-          {page==="fees"       && <FeesPage/>}
+          {page==="fees" && user?.role === "ADMIN" && <FeesPage/>}
         </div>
       </div>
       <ToastStack/>

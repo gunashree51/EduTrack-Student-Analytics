@@ -27,12 +27,12 @@ export default function Sidebar(){
       </div>
       <nav className="sb-nav">
         <div className="sb-section">Navigation</div>
-        {NAV.map(({id,label,Icon,badge})=>(
-          <div key={id} className={`sb-item${page===id?" active":""}`} onClick={()=>setPage(id)}>
-            <Icon/>{label}
-            {badge&&counts[badge]?<span className="sb-badge">{counts[badge]}</span>:null}
-          </div>
-        ))}
+        {NAV.filter(item => user?.role?.toUpperCase() === "ADMIN" || item.id !== "fees").map(({id,label,Icon,badge})=>(
+  <div key={id} className={`sb-item${page===id?" active":""}`} onClick={()=>setPage(id)}>
+    <Icon/>{label}
+    {badge&&counts[badge]?<span className="sb-badge">{counts[badge]}</span>:null}
+  </div>
+))}
       </nav>
       <div className="sb-footer">
         <div className="sb-user">

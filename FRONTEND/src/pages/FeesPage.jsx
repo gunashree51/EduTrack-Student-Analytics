@@ -1,18 +1,7 @@
 import { useState, useMemo } from "react";
 import { useApp } from "../context/AppContext.jsx";
 import Modal from "../components/Modal.jsx";
-import { DEMO_STUDENTS } from "../utils/demoData.js";
 
-const DEMO_FEES = [
-  {id:1,studentId:1,studentName:"Arjun Sharma",  feeType:"Tuition",amount:15000,paid:15000,dueDate:"2024-01-15",status:"Paid",   month:"January"},
-  {id:2,studentId:2,studentName:"Priya Patel",   feeType:"Tuition",amount:15000,paid:15000,dueDate:"2024-01-15",status:"Paid",   month:"January"},
-  {id:3,studentId:3,studentName:"Rohit Verma",   feeType:"Tuition",amount:15000,paid:0,    dueDate:"2024-01-15",status:"Unpaid", month:"January"},
-  {id:4,studentId:4,studentName:"Sneha Gupta",   feeType:"Exam",   amount:5000, paid:5000, dueDate:"2024-02-10",status:"Paid",   month:"February"},
-  {id:5,studentId:5,studentName:"Kavya Nair",    feeType:"Tuition",amount:15000,paid:8000, dueDate:"2024-01-15",status:"Partial",month:"January"},
-  {id:6,studentId:6,studentName:"Aarav Mehta",   feeType:"Library",amount:2000, paid:2000, dueDate:"2024-01-20",status:"Paid",   month:"January"},
-  {id:7,studentId:7,studentName:"Zara Khan",     feeType:"Tuition",amount:15000,paid:0,    dueDate:"2024-02-15",status:"Unpaid", month:"February"},
-  {id:8,studentId:8,studentName:"Dev Sharma",    feeType:"Sports", amount:3000, paid:3000, dueDate:"2024-01-25",status:"Paid",   month:"January"},
-];
 
 const STATUS_COLOR = {
   Paid:    {color:"#34d399",bg:"rgba(52,211,153,0.12)",border:"rgba(52,211,153,0.25)"},
@@ -30,11 +19,10 @@ function FeeBadge({status}){
 }
 
 export default function FeesPage(){
-  const {students} = useApp();
-  const [fees, setFees] = useState(DEMO_FEES);
-  const [modal, setModal] = useState(null);
-  const [filter, setFilter] = useState("All");
-  const S = students.length ? students : DEMO_STUDENTS;
+  const { api, students, fees, setFees, toast } = useApp();
+const [modal, setModal] = useState(null);
+const [filter, setFilter] = useState("All");
+const S = students;
 
   const totalAmount  = fees.reduce((a,f)=>a+f.amount,0);
   const totalPaid    = fees.reduce((a,f)=>a+f.paid,0);
@@ -45,29 +33,58 @@ export default function FeesPage(){
 
   const filtered = filter==="All" ? fees : fees.filter(f=>f.status===filter);
 
-  const handleSave = (data) => {
-    if(data.id){
-      setFees(p=>p.map(f=>f.id===data.id?data:f));
-    } else {
-      const student = S.find(s=>String(s.id)===String(data.studentId));
-      setFees(p=>[...p,{
-        ...data,
-        id: Date.now(),
-        studentName: student?.fullName || "Unknown",
-        status: Number(data.paid)>=Number(data.amount)?"Paid":
-                Number(data.paid)>0?"Partial":"Unpaid",
-      }]);
+ const handleSave = async (data) => {
+  try {
+    const isEdit = !!data.id;
+    const res = await api(isEdit ? `/fees/${data.id}` : "/fees", isEdit ? "PUT" : "POST", data);
+    if (!res.ok) {
+      const d = await res.json();
+      toast(d.message || "Error", "error");
+      return;
     }
+    const saved = await res.json();
+    setFees(prev => isEdit ? prev.map(f => f.id === saved.id ? saved : f) : [...prev, saved]);
+    toast(isEdit ? "Fee updated" : "Fee added");
     setModal(null);
-  };
+  } catch {
+    toast("Fee save failed", "error");
+  }
+};
 
-  const handleDelete = (id) => {
-    if(confirm("Delete this fee record?")) setFees(p=>p.filter(f=>f.id!==id));
-  };
+ const handleDelete = async (id) => {
+  if (!confirm("Delete this fee record?")) return;
+  try {
+    await api(`/fees/${id}`, "DELETE");
+    setFees(p => p.filter(f => f.id !== id));
+    toast("Fee deleted");
+  } catch {
+    toast("Delete failed", "error");
+  }
+};
 
-  const collectFee = (id) => {
-    setFees(p=>p.map(f=>f.id===id?{...f,paid:f.amount,status:"Paid"}:f));
+  const collectFee = async (fee) => {
+  const updated = {
+    studentId: fee.student?.id || fee.studentId,
+    feeType: fee.feeType,
+    amount: Number(fee.amount),
+    paid: Number(fee.amount),
+    dueDate: fee.dueDate,
+    status: "Paid",
+    month: fee.month
   };
+  try {
+    const res = await api(`/fees/${fee.id}`, "PUT", updated);
+    if (!res.ok) {
+      toast("Collect failed", "error");
+      return;
+    }
+    const saved = await res.json();
+    setFees(p => p.map(f => f.id === saved.id ? saved : f));
+    toast("Fee collected");
+  } catch {
+    toast("Collect failed", "error");
+  }
+};
 
   return(
     <div className="page">
@@ -170,7 +187,7 @@ export default function FeesPage(){
           <tbody>
             {filtered.map(f=>(
               <tr key={f.id}>
-                <td><span className="s-av">{f.studentName[0]}</span><strong>{f.studentName}</strong></td>
+                <td><span className="s-av">{(f.student?.fullName || "—")[0]}</span><strong>{f.student?.fullName || "—"}</strong></td>
                 <td>
                   <span style={{padding:"2px 8px",borderRadius:5,fontSize:11,fontWeight:600,
                     background:"var(--blue-g)",color:"var(--blue)"}}>
@@ -193,7 +210,7 @@ export default function FeesPage(){
                       <button className="btn btn-sm"
                         style={{background:"var(--em-g)",color:"var(--emerald)",border:"1px solid rgba(52,211,153,0.25)",
                           padding:"5px 10px",fontSize:11,fontWeight:600,borderRadius:7,cursor:"pointer",fontFamily:"Outfit,sans-serif"}}
-                        onClick={()=>collectFee(f.id)}>
+                        onClick={()=>collectFee(f)}>
                         Collect
                       </button>
                     )}
@@ -226,10 +243,14 @@ export default function FeesPage(){
 function FeeModal({fee,students,onSave,onClose}){
   const isEdit=!!fee?.id;
   const [f,setF]=useState({
-    studentId:"",feeType:"Tuition",amount:"",paid:"0",
-    dueDate:new Date().toISOString().split("T")[0],month:"January",
-    ...(isEdit?fee:{})
-  });
+  studentId: fee?.student?.id || fee?.studentId || "",
+  feeType: fee?.feeType || "Tuition",
+  amount: fee?.amount || "",
+  paid: fee?.paid ?? "0",
+  dueDate: fee?.dueDate || new Date().toISOString().split("T")[0],
+  month: fee?.month || "January",
+  ...(isEdit ? { id: fee.id } : {})
+});
   const s=k=>e=>setF(p=>({...p,[k]:e.target.value}));
   return(
     <Modal title={isEdit?"Edit Fee Record":"Add Fee Record"} onClose={onClose}>
@@ -275,8 +296,13 @@ function FeeModal({fee,students,onSave,onClose}){
         <button className="btn btn-primary" onClick={()=>{
           const paid=Number(f.paid||0), amount=Number(f.amount||0);
           const status=paid>=amount&&amount>0?"Paid":paid>0?"Partial":"Unpaid";
-          const student=students.find(st=>String(st.id)===String(f.studentId));
-          onSave({...f,paid,amount,status,studentName:student?.fullName||f.studentName||""});
+          onSave({
+  ...f,
+  studentId: Number(f.studentId),
+  paid,
+  amount,
+  status
+});
         }}>
           {isEdit?"Save Changes":"Add Fee Record"}
         </button>

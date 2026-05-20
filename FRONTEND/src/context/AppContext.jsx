@@ -13,6 +13,7 @@ export function AppProvider({ children }) {
   const [attendance, setAttendance] = useState([]);
   const [grades,     setGrades]     = useState([]);
   const [toasts,     setToasts]     = useState([]);
+  const [fees,       setFees]       = useState([]);
   const [page,       setPage]       = useState("dashboard");
 
   const api = useCallback((path, method = "GET", body = null) =>
@@ -32,29 +33,42 @@ export function AppProvider({ children }) {
 
   const logout = () => {
     setToken(null); setUser(null);
-    setStudents([]); setAttendance([]); setGrades([]);
+    setStudents([]); setAttendance([]); setGrades([]); setFees([]);
     localStorage.removeItem("et_tok"); localStorage.removeItem("et_usr");
     setPage("dashboard");
   };
-
-  const loadAll = useCallback(async () => {
-    if (!token) return;
-    try {
-      const [s, a, g] = await Promise.all([
-        api("/students").then(r => r.json()),
-        api("/attendance").then(r => r.json()),
-        api("/grades").then(r => r.json()),
-      ]);
-      if (Array.isArray(s)) setStudents(s);
-      if (Array.isArray(a)) setAttendance(a);
-      if (Array.isArray(g)) setGrades(g);
-    } catch { /* demo mode */ }
-  }, [api, token]);
+const loadAll = useCallback(async () => {
+  if (!token) return;
+  try {
+    const s = await api("/students").then(r => r.json());
+    if (Array.isArray(s)) setStudents(s);
+  } catch {
+    /* students load failed */
+  }
+  try {
+    const a = await api("/attendance").then(r => r.json());
+    if (Array.isArray(a)) setAttendance(a);
+  } catch {
+    /* attendance load failed */
+  }
+  try {
+    const g = await api("/grades").then(r => r.json());
+    if (Array.isArray(g)) setGrades(g);
+  } catch {
+    /* grades load failed */
+  }
+  try {
+    const f = await api("/fees").then(r => r.json());
+    if (Array.isArray(f)) setFees(f);
+  } catch {
+    /* fees load failed */
+  }
+}, [api, token]);
 
   useEffect(() => { if (token) loadAll(); }, [token]);
 
   return (
-    <Ctx.Provider value={{ token, user, login, logout, api, toast, toasts, students, setStudents, attendance, setAttendance, grades, setGrades, loadAll, page, setPage }}>
+   <Ctx.Provider value={{ token, user, login, logout, api, toast, toasts, students, setStudents, attendance, setAttendance, grades, setGrades, fees, setFees, loadAll, page, setPage }}>
       {children}
     </Ctx.Provider>
   );

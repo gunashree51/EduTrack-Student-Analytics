@@ -3,7 +3,7 @@ import StatCard   from "../components/StatCard.jsx";
 import DonutChart from "../components/DonutChart.jsx";
 import { StatusBadge } from "../components/Badges.jsx";
 import { IcoUsers, IcoCal, IcoGrade, IcoWarn } from "../components/Icons.jsx";
-import { DEMO_STUDENTS, DEMO_ATTENDANCE, DEMO_GRADES } from "../utils/demoData.js";
+
 
 const BAR_COLORS = [
   { color:"#a78bfa", bg:"rgba(167,139,250,0.3)" },
@@ -16,16 +16,16 @@ const BAR_COLORS = [
 export default function DashboardPage() {
   const { students, attendance, grades } = useApp();
 
-  const S = students.length   ? students   : DEMO_STUDENTS;
-  const A = attendance.length ? attendance : DEMO_ATTENDANCE;
-  const G = grades.length     ? grades     : DEMO_GRADES;
+  const S = students;
+const A = attendance;
+const G = grades;
 
   // Stats
   const active    = S.filter(s => s.status === "ACTIVE").length;
   const present   = A.filter(a => a.status === "PRESENT").length;
-  const attPct    = A.length ? Math.round((present / A.length) * 100) : 87;
-  const pAbsent   = A.length ? Math.round((A.filter(a => a.status==="ABSENT").length / A.length)*100) : 9;
-  const pLate     = 100 - attPct - pAbsent;
+  const attPct    = A.length ? Math.round((present / A.length) * 100) : 0;
+const pAbsent = A.length ? Math.round((A.filter(a => a.status === "ABSENT").length / A.length) * 100) : 0;
+const pLate = A.length ? 100 - attPct - pAbsent : 0;
 
   // Attendance summary counts for the donut legend
   const pPresent  = attPct;
@@ -44,12 +44,8 @@ export default function DashboardPage() {
       ...BAR_COLORS[i % BAR_COLORS.length],
     }));
   if (!bars.length) [
-    { name:"Computer Sci", pct:91, ...BAR_COLORS[0] },
-    { name:"English",      pct:88, ...BAR_COLORS[1] },
-    { name:"Mathematics",  pct:83, ...BAR_COLORS[2] },
-    { name:"Science",      pct:76, ...BAR_COLORS[3] },
-    { name:"History",      pct:71, ...BAR_COLORS[4] },
-  ].forEach(b => bars.push(b));
+  { name:"No grades yet", pct:0, ...BAR_COLORS[0] },
+].forEach(b => bars.push(b));
 
   const recent = [...S].slice(-5).reverse();
 
@@ -60,7 +56,7 @@ export default function DashboardPage() {
         <StatCard color="blue"  val={S.length} label="Total Students"  sub="Across all classes"   chip={`${active} active`}   icon={<IcoUsers />} delay={0} />
         <StatCard color="cyan"  val={attPct}   label="Attendance Rate" sub="Weekly average"        chip="↑ 2% this month"      suffix="%" icon={<IcoCal />}   delay={80} />
         <StatCard color="amber" val={G.length} label="Grades Recorded" sub="Exams logged"          chip="This term"            icon={<IcoGrade />} delay={160} />
-        <StatCard color="rose"  val={3}        label="Low Attendance"  sub="Need follow-up"        chip="Below 75%"            icon={<IcoWarn />}  delay={240} />
+        <StatCard color="rose" val={0} label="Low Attendance" sub="Need follow-up" chip="Below 75%" icon={<IcoWarn />} delay={240} />
       </div>
 
       {/* ── Charts ── */}

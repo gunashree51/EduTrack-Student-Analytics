@@ -3,7 +3,6 @@ import { useApp } from "../context/AppContext.jsx";
 import Modal from "../components/Modal.jsx";
 import { StatusBadge } from "../components/Badges.jsx";
 import { IcoSearch } from "../components/Icons.jsx";
-import { DEMO_STUDENTS } from "../utils/demoData.js";
 
 export default function StudentsPage({ triggerAdd, onAddDone }) {
   const { api, students, setStudents, toast } = useApp();
@@ -13,7 +12,7 @@ export default function StudentsPage({ triggerAdd, onAddDone }) {
   // If topbar "Add Student" was clicked, open modal
   useState(() => { if (triggerAdd) { setModal({}); onAddDone && onAddDone(); } }, [triggerAdd]);
 
-  const S = students.length ? students : DEMO_STUDENTS;
+  const S = students;
   const filtered = S.filter(s => {
     const q2 = q.toLowerCase();
     return s.fullName?.toLowerCase().includes(q2) ||
